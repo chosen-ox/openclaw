@@ -143,7 +143,9 @@ async function execSystemctl(
 }
 
 function readSystemctlDetail(result: { stdout: string; stderr: string }): string {
-  return (result.stderr || result.stdout || "").trim();
+  // Prefer stdout (systemctl's actual output like "not-found") over stderr
+  // (Node.js error message like "Command failed: ...")
+  return (result.stdout || result.stderr || "").trim();
 }
 
 function isSystemctlMissing(detail: string): boolean {
